@@ -109,4 +109,49 @@ of this software, even if advised of the possibility of such damage.
     </xsl:if>
   </xsl:template>
 
+<!--geneate title template, from old RC XSLTs-->
+  <xsl:template name="generateTitle">
+    <xsl:choose>
+      <xsl:when test="$useHeaderFrontMatter='false' and ancestor-or-self::tei:TEI/tei:text/tei:front//tei:docTitle">
+        <xsl:apply-templates select="ancestor-or-self::tei:TEI/tei:text/tei:front//tei:docTitle/tei:titlePart"/>
+      </xsl:when>
+      <xsl:when test="$useHeaderFrontMatter='false' and ancestor-or-self::tei:teiCorpus/tei:text/tei:front//tei:docTitle">
+        <xsl:apply-templates select="ancestor-or-self::tei:teiCorpus/tei:text/tei:front//tei:docTitle/tei:titlePart"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:for-each select="ancestor-or-self::tei:TEI|ancestor-or-self::tei:teiCorpus">
+          <xsl:choose>
+            <xsl:when test="ancestor-or-self::tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:analytic">
+              <xsl:choose>
+                <xsl:when test="ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div[@type='figure']">
+                  <xsl:text>Figure </xsl:text>
+                  <xsl:value-of select="ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div[@type='figure']/tei:figure/@n"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:apply-templates mode="htmlheader"
+                    select="ancestor-or-self::tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:analytic/tei:title[not(@type='subordinate')]"
+                  />
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:when>
+            <xsl:when test="ancestor-or-self::tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:monogr">
+              <xsl:apply-templates mode="htmlheader"
+                select="ancestor-or-self::tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:monogr/tei:title[not(@type='subordinate')]"
+              />
+            </xsl:when>
+            <xsl:when test="ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div[@type='figure']">
+              <xsl:text>Figure </xsl:text>
+              <xsl:value-of select="ancestor-or-self::tei:TEI/tei:text/tei:body/tei:div[@type='figure']/tei:figure/@n"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates mode="htmlheader"
+                select="ancestor-or-self::tei:TEI/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title[not(@type='subordinate')]"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:for-each>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+<!--end of addition-->
+
 </xsl:stylesheet>

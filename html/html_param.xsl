@@ -320,6 +320,7 @@ will generate an &lt;h2&gt;</p>
     in the HTML header</param>
       </desc>
    </doc>
+  
   <xsl:template name="metaHTML">
       <xsl:param name="title"/>
     <xsl:variable name="pathID">
@@ -328,7 +329,10 @@ will generate an &lt;h2&gt;</p>
     <xsl:variable name="title">
       <xsl:value-of select="normalize-space(ancestor-or-self::tei:TEI/tei:teiHeader/tei:fileDesc/tei:sourceDesc/tei:biblStruct/tei:analytic/tei:title/.)"/>
     </xsl:variable>
-      <meta name="author">
+    <xsl:variable name="volume-title">
+      <xsl:value-of select="ancestor-or-self::tei:TEI/tei:teiHeader/tei:fileDesc/tei:titleStmt/tei:title[@type='main']"/>
+    </xsl:variable>  
+    <meta name="author">
          <xsl:attribute name="content">
             <xsl:sequence select="tei:generateMetadataAuthor(.)"/>
          </xsl:attribute>
@@ -336,7 +340,7 @@ will generate an &lt;h2&gt;</p>
       <xsl:if test="$filePerPage='true'">
 	<meta name="viewport" content="width={$viewPortWidth}, height={$viewPortHeight}"/>
       </xsl:if>
-      <meta name="generator" content="Text Encoding Initiative Consortium XSLT stylesheets"/>
+      <meta name="generator" content="Text Encoding Initiative Consortium XSLT stylesheets, adapted for Romantic Circles"/>
       <xsl:choose>
 	<xsl:when test="$outputTarget='epub3'">
 	  <meta charset="utf-8" />
@@ -350,6 +354,7 @@ will generate an &lt;h2&gt;</p>
 	  </meta>-->
 	  <meta xmlns="http://www.w3.org/1999/xhtml" name="DC.Title" content="{$title}"/>
 	  <meta xmlns="http://www.w3.org/1999/xhtml" name="DC.Identifier" content="{$pathID}"/>
+	  <meta name="DC.VolumeTitle" content="{$volume-title}"/>
 	  <meta name="DC.Type" content="Text"/>
 	  <meta name="DC.Format" content="text/html"/>
 	</xsl:otherwise>

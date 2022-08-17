@@ -80,37 +80,103 @@
          <p xmlns="http://www.w3.org/1999/xhtml"> processors must support `key' </p>
       </desc>
    </doc>
-   <xsl:template match="/">
-      
+ 
+
       <!--RC: to process multiple files [tjm]-->
-      <xsl:for-each select="Edition/part">
-         <xsl:apply-templates select="document(@code)/tei:TEI"/>
-         <xsl:call-template name="multifile"/>
-         <xsl:call-template name="processTEI"/>
+   <xsl:template match="tei:TEI">
+      <xsl:variable name="idNumber">
+         <xsl:value-of select="tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='edition']"/>
+      </xsl:variable> 
+      <xsl:for-each select=".">
+         <xsl:result-document format="serial" href="{$idNumber}.html">
+            <xsl:call-template name="teiStartHook"/>
+            <xsl:if test="$verbose = 'true'">
+               <xsl:message>TEI HTML creation in single document mode </xsl:message>
+            </xsl:if>
+            <html>
+               <xsl:call-template name="addLangAtt"/>
+               <xsl:comment>THIS FILE IS GENERATED FROM AN XML MASTER. DO NOT EDIT (5)</xsl:comment>
+               <head> 
+                 <xsl:variable name="pagetitle">
+                  <xsl:sequence select="tei:generateTitle(.)"/>
+                 </xsl:variable>
+                  <xsl:call-template name="metaHTML"/>
+                  <xsl:call-template name="includeCSS"/>
+                  <xsl:call-template name="cssHook"/>
+                  <xsl:call-template name="includeJavascript"/>
+                  <xsl:call-template name="javascriptHook"/>
+               </head>
+               <body class="simple" id="TOP">
+                  <xsl:call-template name="bodyMicroData"/>
+                  <xsl:call-template name="bodyJavascriptHook"/>
+                  <xsl:call-template name="bodyHook"/>
+                  
+                  <xsl:call-template name="startHook"/>
+                  <xsl:call-template name="simpleBody"/>
+                  
+                  <xsl:call-template name="bodyEndHook"/>
+               </body>
+            </html>
+            <xsl:if test="$verbose = 'true'">
+               <xsl:message>TEI HTML: run end hook template teiEndHook</xsl:message>
+            </xsl:if>
+            <xsl:call-template name="teiEndHook"/>
+            <xsl:apply-templates select="document(@code)/tei:TEI"/>
+           
+         </xsl:result-document>
+
       </xsl:for-each>
-
-      <!--end of addition-->
-
       <xsl:apply-templates/>
    </xsl:template>
 
-   <!--A multifile attempt-->
-   
-   <xsl:template name="multifile">
+   <!--A multifile attempt
+   <xsl:template match="tei:TEI">
+
+      
             <xsl:for-each select="Edition/part[@type='code']">
-               <xsl:result-document href="{tei:teiHeader/fileDesc/publicationStmt/idno[@type='edition']}.html">
+               <xsl:result-document format="serial" href="file:///{$idNumber}.html">
+                  <xsl:call-template name="teiStartHook"/>
+                  <xsl:if test="$verbose = 'true'">
+                     <xsl:message>TEI HTML creation in single document mode </xsl:message>
+                  </xsl:if>
+                  <html>
+                     <xsl:call-template name="addLangAtt"/>
+                     <xsl:variable name="pagetitle">
+                        <xsl:sequence select="tei:generateTitle(.)"/>
+                     </xsl:variable>
+                     <xsl:sequence select="tei:htmlHead($pagetitle, 5)"/>
+                     <body class="simple" id="TOP">
+                        <xsl:call-template name="bodyMicroData"/>
+                        <xsl:call-template name="bodyJavascriptHook"/>
+                        <xsl:call-template name="bodyHook"/>
+ 
+                        <xsl:call-template name="startHook"/>
+                        <xsl:call-template name="simpleBody"/>
+
+                        <xsl:call-template name="bodyEndHook"/>
+                     </body>
+                  </html>
+                  <xsl:if test="$verbose = 'true'">
+                     <xsl:message>TEI HTML: run end hook template teiEndHook</xsl:message>
+                  </xsl:if>
+                  <xsl:call-template name="teiEndHook"/>
                   <xsl:copy select="document(@code)/tei:TEI"/>
+                  <xsl:call-template name="processTEI"/>
+                  <xsl:apply-templates/>
                </xsl:result-document>
             </xsl:for-each>
+
             <xsl:apply-templates/>
    </xsl:template>
+   end of addition-->
    
+ 
    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
       <desc>
          <p>Process top-level elements /</p>
       </desc>
    </doc>
-   <xsl:template name="processTEI">
+   <xsl:template match="/">
       <xsl:for-each select="Edition/part">
          <xsl:apply-templates select="document(@code)/tei:TEI"/>
       </xsl:for-each>
@@ -368,6 +434,7 @@
       </xsl:choose>
    </xsl:template>
    
+   <!--
    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
       <desc>
          <p>Process root element TEI</p>
@@ -389,17 +456,17 @@
             <xsl:call-template name="bodyJavascriptHook"/>
             <xsl:call-template name="bodyHook"/>
             <xsl:if test="not(tei:text/tei:front/tei:titlePage)">
-               <!--<div class="stdheader autogenerated">
+               <div class="stdheader autogenerated">
                   <xsl:call-template name="stdheader">
                      <xsl:with-param name="title">
                         <xsl:sequence select="tei:generateTitle(.)"/>
                      </xsl:with-param>
                   </xsl:call-template>
-               </div>-->
+               </div>
             </xsl:if>
             <xsl:call-template name="startHook"/>
             <xsl:call-template name="simpleBody"/>
-            <!--<xsl:call-template name="stdfooter"/>-->
+            <xsl:call-template name="stdfooter"/>
             <xsl:call-template name="bodyEndHook"/>
          </body>
       </html>
@@ -408,6 +475,7 @@
       </xsl:if>
       <xsl:call-template name="teiEndHook"/>
    </xsl:template>
+-->
 
    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
       <desc>
@@ -1145,6 +1213,7 @@
       <xsl:call-template name="stdfooter"/>-->
    </xsl:template>
    
+  
    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
       <desc>[html] make the header of an HTML file </desc>
    </doc>
@@ -1155,7 +1224,7 @@
       <xsl:for-each select="$top/*">
          <head>
             <xsl:comment>THIS FILE IS GENERATED FROM AN XML MASTER. DO NOT EDIT (<xsl:value-of select="$number"/>)</xsl:comment>
-            <!-- No empty <title/> allowed, main browsers don't like it at all -->
+             <!--No empty <title/> allowed, main browsers don't like it at all -->
             <xsl:if test="string($pagetitle) or string($htmlTitlePrefix)">
                <title>
                   <xsl:value-of select="$htmlTitlePrefix"/>
@@ -1166,307 +1235,12 @@
                </title>
             </xsl:if>
 
-            <xsl:call-template name="headHook"/>
             <xsl:call-template name="metaHTML">
-               <xsl:with-param name="title" select="$pagetitle"/>
+               <xsl:with-param name="title"/>
             </xsl:call-template>
+            <xsl:call-template name="headHook"/>
+            <xsl:apply-templates/>
 
-            <xsl:choose>
-               <xsl:when test="count(key('TREES', 1)) = 0"/>
-               <xsl:when test="$treestyle = 'googlechart'">
-                  <script type="text/javascript" src="https://www.google.com/jsapi"/>
-                  <script type="text/javascript">
-                            google.load('visualization', '1', {
-                                packages:[ 'orgchart']
-                            });
-                            google.setOnLoadCallback(drawCharts);</script>
-               </xsl:when>
-               <xsl:when test="$treestyle = 'd3DragDropTree'">
-                  <!-- from  http://www.robschmuecker.com/d3-js-drag-and-drop-zoomable-tree/ -->
-                  <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"/>
-                  <style type="text/css">
-                     .node {
-                         cursor: pointer;
-                     }
-                     
-                     .overlay {
-                         background-color: #EEE;
-                     }
-                     
-                     .node circle {
-                         fill: #fff;
-                         stroke: steelblue;
-                         stroke-width: 1.5px;
-                     }
-                     
-                     .node text {
-                         font-size: 10px;
-                         font-family: sans-serif;
-                     }
-                     
-                     .link {
-                         fill: none;
-                         stroke: #ccc;
-                         stroke-width: 1.5px;
-                     }
-                     
-                     .templink {
-                         fill: none;
-                         stroke: red;
-                         stroke-width: 3px;
-                     }
-                     
-                     .ghostCircle.show {
-                         display: block;
-                     }
-                     
-                     .ghostCircle,
-                     .activeDrag .ghostCircle {
-                         display: none;
-                     }</style>
-               </xsl:when>
-               <xsl:when test="$treestyle = 'd3CollapsableTree'">
-                  <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"/>
-                  <!-- from d3noob’s block #8375092 January 11, 2014
-	    Interactive d3.js tree diagram
-	    This is a d3.js tree diagram that incldes an interactive element as used as an example in the book D3 Tips and Tricks.
-
-	    Any parent node can be clicked on to collapse the portion of the tree below it, on itself. Conversly, it can be clicked on again to regrow.
-
-	    It is derived from the Mike Bostock Collapsible tree example but it is a slightly cut down version.
-	    -->
-
-                  <style>
-                     .treediagram {
-                         background-color: #eee
-                     }
-                     .node {
-                         cursor: pointer;
-                     }
-                     .nodediv.desc {
-                         font: 8px sans-serif;
-                     }
-                     .nodediv {
-                         border: solid black 1px;
-                         background-color: white;
-                         padding: 2px;
-                         font: 12px sans-serif;
-                         font-weight: bold;
-                     }
-                     span.att {
-                         font-style: italic;
-                     }
-                     .highlight {
-                         color: red;
-                     }
-                     .link {
-                         fill: none;
-                         stroke: #aaa;
-                         stroke-width: 2px;
-                     }</style>
-                  <script>
-	      // ************** Generate the tree diagram	 *****************
-	      var margin = {top: 0, right: 0, bottom: 0, left: 30};
-	      var width, height, tree, svg, diagonal;
-	      var rectw = 120,recth=50;
-	      var i = 0,	duration = 750,	treeData;
-	     
-function drawCollapsibleTree (ID, w,h) {
-   width = w - margin.right - margin.left;
-   height = h - margin.top - margin.bottom;
-   tree = d3.layout.tree()
-	.size([height, width]);
-
-   diagonal = d3.svg.diagonal()
-	.projection(function(d) { return [d.y, d.x]; });
-   treeData.x0 = height / 2;
-   treeData.y0 = 0;
-   svg = d3.select(ID).append("svg:svg")
-	.attr("width", width + margin.right + margin.left)
-	.attr("height", height + margin.top + margin.bottom)
-     .append("g")
-	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-   update(treeData);
-}
-
-
-function update(source) {
-
-  // Compute the new tree layout.
-  var nodes = tree.nodes(treeData).reverse(),
-	  links = tree.links(nodes);
-
-  // Normalize for fixed-depth.
-  nodes.forEach(function(d) { d.y = d.depth * 180; });
-
-  // Update the nodes…
-  var node = svg.selectAll("g.node")
-	  .data(nodes, function(d) { return d.id || (d.id = ++i); });
-
-  // Enter any new nodes at the parent's previous position.
-  var nodeEnter = node.enter().append("g")
-	  .attr("class", "node")
-	  .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
-	  .on("click", click);
-
-   nodeEnter.append("foreignObject")
-      .attr("x", -10)
-      .attr("y", -10)
-      .attr("width", rectw) 
-      .attr("height", recth) 
-      .append("xhtml:div")
-      .attr("class",  function(d) { return "nodediv " + d.style; })
-      .html(function(d) { return d.name; });
-
-
-  // Transition nodes to their new position.
-  var nodeUpdate = node.transition()
-	  .duration(duration)
-	  .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
-
-  nodeUpdate.select("div")
- 	  .attr("width", rectw)
- 	  .attr("height", recth)
-	  .style("background-color", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
-
-  nodeUpdate.select("text")
-	  .style("fill-opacity", 1);
-
-  // Transition exiting nodes to the parent's new position.
-  var nodeExit = node.exit().transition()
-	  .duration(duration)
-	  .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
-	  .remove();
-
-  nodeExit.select("foreignObject")
- 	  .attr("width", rectw)
- 	  .attr("height", recth);
-
-  // Update the links…
-  var link = svg.selectAll("path.link")
-	  .data(links, function(d) { return d.target.id; });
-
-  // Enter any new links at the parent's previous position.
-  link.enter().insert("path", "g")
-	  .attr("class", "link")
-	  .attr("d", function(d) {
-		var o = {x: source.x0, y: source.y0};
-		return diagonal({source: o, target: o});
-	  });
-
-  // Transition links to their new position.
-  link.transition()
-	  .duration(duration)
-	  .attr("d", diagonal);
-
-  // Transition exiting nodes to the parent's new position.
-  link.exit().transition()
-	  .duration(duration)
-	  .attr("d", function(d) {
-		var o = {x: source.x, y: source.y};
-		return diagonal({source: o, target: o});
-	  })
-	  .remove();
-
-  // Stash the old positions for transition.
-  nodes.forEach(function(d) {
-	d.x0 = d.x;
-	d.y0 = d.y;
-  });
-}
-
-// Toggle children on click.
-function click(d) {
-  if (d.children) {
-	d._children = d.children;
-	d.children = null;
-  } else {
-	d.children = d._children;
-	d._children = null;
-  }
-  update(d);
-}
-	  </script>
-               </xsl:when>
-               <xsl:when test="$treestyle = 'd3verticaltree'">
-                  <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"/>
-                  <script type="text/javascript">
-                            var downoffset = 40;
-                            var down2offset = 5;
-                            var diagonal = d3.svg.diagonal().projection(function (d) {
-                                return[d.x, d.y];
-                            });
-                            function elbow(d, i) {
-                                return "M" + d.target.x + "," + (d.target.y - downoffset) + "V" + (d.source.y + down2offset) + "H" + d.source.x;
-                            }
-                            function visMe (ID, extray) {
-                                var vis = d3.select(ID).append("svg:svg").attr("class", "svgtree").attr("width", treewidth + 50).attr("height", treedepth + extray).append("svg:g").attr("transform", function (d) {
-                                    return "translate(" + 0 + "," + (extray + 25) + ")";
-                                })
-                                var tree = d3.layout.tree().size([treewidth, treedepth]);
-                                var nodes = tree.nodes(treeData);
-                                var links = tree.links(nodes);
-                                var link = vis.selectAll("pathlink").data(links).enter().append("svg:path").attr("class", function (d) {
-                                    return "link" + d.source.showlink;
-                                }).attr("d", elbow);
-                                var node = vis.selectAll("g.node").data(nodes).enter().append("svg:g").attr("class", "node").attr("id", function (d) {
-                                    return d.id;
-                                })
-                                node.append("svg:foreignObject").attr("transform", function (d) {
-                                    return "translate(" + d.x + "," + d.y + ")";
-                                }).attr("x", -40).attr("y", yoffset).attr("width", 80).attr("height", 80).attr("style", "fill-opacity:1.0").append("xhtml:div").attr("class", function (d) {
-                                    return "nodetext " + d.type;
-                                }).html(function (d) {
-                                    return d.name;
-                                });
-                                var linknode = vis.selectAll("g.node").data(nodes).filter(function (d) {
-                                    return d.synch
-                                });
-                                linknode.append("svg:line").attr("x1", function (d) {
-                                    other = vis.select(d.synch).datum();
-                                    if (d.x<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
-                            other.x) {
-                                return d.x - 30;
-                            } else {
-                                return d.x + 30;
-                            };
-                        }).attr("y1", function (d) {
-                            return d.y + (yoffset + 5);
-                        }).attr("x2", function (d) {
-                            other = vis.select(d.synch).datum();
-                            if (d.x<xsl:text disable-output-escaping="yes">&gt;</xsl:text>
-                            other.x) {
-                                return other.x + 30;
-                            } else {
-                                return other.x - 30;
-                            };
-                        }).attr("y2", function (d) {
-                            return vis.select(d.synch).datum().y + (yoffset + 5);
-                        }).attr("stroke-dasharray", "10,10").attr("style", "stroke-width: 2px;stroke:green");
-                    }</script>
-                  <style>
-                     .nodetext {
-                         text-align: center;
-                     }
-                     .linkinvisible {
-                         visibility: hidden;
-                     }
-                     .link {
-                         fill: none;
-                         stroke: black;
-                         stroke-width: 1px;
-                     }
-                     .node {
-                         font-weight: normal;
-                         font-size: 7pt;
-                     }
-                     .treediagram {
-                     }
-                     .svgtree {
-                         padding-bottom: 6pt;
-                     }</style>
-               </xsl:when>
-            </xsl:choose>
             <xsl:call-template name="includeCSS"/>
             <xsl:call-template name="cssHook"/>
             <xsl:call-template name="includeJavascript"/>
@@ -1474,6 +1248,8 @@ function click(d) {
          </head>
       </xsl:for-each>
    </xsl:function>
+  
+   
    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
       <desc>[html] bring in CSS files </desc>
    </doc>
