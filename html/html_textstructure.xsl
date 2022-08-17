@@ -82,7 +82,7 @@
    </doc>
  
 
-      <!--RC: to process multiple files [tjm]-->
+   <!--RC: to process multiple files [tjm]-->
    <xsl:template match="tei:TEI">
       <xsl:variable name="idNumber">
          <xsl:value-of select="tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='edition']"/>
@@ -114,63 +114,16 @@
                <xsl:message>TEI HTML: run end hook template teiEndHook</xsl:message>
             </xsl:if>
             <xsl:call-template name="teiEndHook"/>
-            <xsl:copy select="document(@code)/tei:TEI"/>
-            <!--<xsl:call-template name="processTEI"/>-->
-            <xsl:apply-templates/>
          </xsl:result-document>
-             <!-- <xsl:call-template name="processTEI"/>-->
-         <xsl:apply-templates select="document(@code)/tei:TEI"/>
-      </xsl:for-each>
-      <xsl:apply-templates/>
+        </xsl:for-each>
    </xsl:template>
-
-   <!--A multifile attempt
-   <xsl:template match="tei:TEI">
-
-      
-            <xsl:for-each select="Edition/part[@type='code']">
-               <xsl:result-document format="serial" href="file:///{$idNumber}.html">
-                  <xsl:call-template name="teiStartHook"/>
-                  <xsl:if test="$verbose = 'true'">
-                     <xsl:message>TEI HTML creation in single document mode </xsl:message>
-                  </xsl:if>
-                  <html>
-                     <xsl:call-template name="addLangAtt"/>
-                     <xsl:variable name="pagetitle">
-                        <xsl:sequence select="tei:generateTitle(.)"/>
-                     </xsl:variable>
-                     <xsl:sequence select="tei:htmlHead($pagetitle, 5)"/>
-                     <body class="simple" id="TOP">
-                        <xsl:call-template name="bodyMicroData"/>
-                        <xsl:call-template name="bodyJavascriptHook"/>
-                        <xsl:call-template name="bodyHook"/>
- 
-                        <xsl:call-template name="startHook"/>
-                        <xsl:call-template name="simpleBody"/>
-
-                        <xsl:call-template name="bodyEndHook"/>
-                     </body>
-                  </html>
-                  <xsl:if test="$verbose = 'true'">
-                     <xsl:message>TEI HTML: run end hook template teiEndHook</xsl:message>
-                  </xsl:if>
-                  <xsl:call-template name="teiEndHook"/>
-                  <xsl:copy select="document(@code)/tei:TEI"/>
-                  <xsl:call-template name="processTEI"/>
-                  <xsl:apply-templates/>
-               </xsl:result-document>
-            </xsl:for-each>
-
-            <xsl:apply-templates/>
-   </xsl:template>
-   end of addition-->
-   
  
    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
       <desc>
          <p>Process top-level elements /</p>
       </desc>
    </doc>
+   <!--RC: template renamed from "ProcessTEI" to match all nodes (to properly process Parts file)-->
    <xsl:template match="/">
       <xsl:for-each select="Edition/part">
          <xsl:apply-templates select="document(@code)/tei:TEI"/>
