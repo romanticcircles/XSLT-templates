@@ -83,61 +83,87 @@
  
 
       <!--RC: to process multiple files [tjm]-->
-   <xsl:template match="/">
-           <xsl:for-each select="Edition/part">
+   <xsl:template match="tei:TEI">
+      <xsl:variable name="idNumber">
+         <xsl:value-of select="tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='edition']"/>
+      </xsl:variable> 
+      <xsl:for-each select=".">
+         <xsl:result-document format="serial" href="{$idNumber}.html">
+            <xsl:call-template name="teiStartHook"/>
+            <xsl:if test="$verbose = 'true'">
+               <xsl:message>TEI HTML creation in single document mode </xsl:message>
+            </xsl:if>
+            <html>
+               <xsl:call-template name="addLangAtt"/>
+               <xsl:variable name="pagetitle">
+                  <xsl:sequence select="tei:generateTitle(.)"/>
+               </xsl:variable>
+               <xsl:sequence select="tei:htmlHead($pagetitle, 5)"/>
+               <body class="simple" id="TOP">
+                  <xsl:call-template name="bodyMicroData"/>
+                  <xsl:call-template name="bodyJavascriptHook"/>
+                  <xsl:call-template name="bodyHook"/>
+                  
+                  <xsl:call-template name="startHook"/>
+                  <xsl:call-template name="simpleBody"/>
+                  
+                  <xsl:call-template name="bodyEndHook"/>
+               </body>
+            </html>
+            <xsl:if test="$verbose = 'true'">
+               <xsl:message>TEI HTML: run end hook template teiEndHook</xsl:message>
+            </xsl:if>
+            <xsl:call-template name="teiEndHook"/>
+            <xsl:copy select="document(@code)/tei:TEI"/>
+            <!--<xsl:call-template name="processTEI"/>-->
+            <xsl:apply-templates/>
+         </xsl:result-document>
+             <!-- <xsl:call-template name="processTEI"/>-->
          <xsl:apply-templates select="document(@code)/tei:TEI"/>
       </xsl:for-each>
       <xsl:apply-templates/>
    </xsl:template>
 
-   <!--A multifile attempt-->
+   <!--A multifile attempt
    <xsl:template match="tei:TEI">
-      <xsl:variable name="idNumber">
-         <xsl:value-of select="document/tei:teiHeader/tei:fileDesc/tei:publicationStmt/tei:idno[@type='edition']"/>
-      </xsl:variable>
+
       
             <xsl:for-each select="Edition/part[@type='code']">
-               <xsl:result-document href="{$idNumber}.html">
+               <xsl:result-document format="serial" href="file:///{$idNumber}.html">
                   <xsl:call-template name="teiStartHook"/>
-                  
-                  <!-- RC: don't get what this is about becasue "verbosity" means something very different to me, maybe? -->
-                  <!--	<xsl:if test="$verbose='true'">
-							<xsl:message>TEI HTML in single document mode </xsl:message>
-						</xsl:if> -->
-                  
-                  <html xmlns="http://www.w3.org/1999/xhtml">
+                  <xsl:if test="$verbose = 'true'">
+                     <xsl:message>TEI HTML creation in single document mode </xsl:message>
+                  </xsl:if>
+                  <html>
                      <xsl:call-template name="addLangAtt"/>
-                     <xsl:comment>THIS FILE IS GENERATED FROM AN XML MASTER. DO NOT EDIT (5)</xsl:comment>
-                     <head>
-                        <xsl:variable name="pagetitle">
-                           <xsl:call-template name="generateTitle"/>
-                        </xsl:variable>
-                        <xsl:call-template name="metaHTML">
-                           <xsl:with-param name="title" select="$pagetitle"/>
-                        </xsl:call-template>
-                        <title>
-                           <xsl:value-of select="$pagetitle"/>
-                        </title>                  
-                        <xsl:call-template name="includeCSS"/> 
-                     </head>
-                     <body>
-                              <div id="container">
-                                 <xsl:call-template name="simpleBody"/>
-                              </div>
+                     <xsl:variable name="pagetitle">
+                        <xsl:sequence select="tei:generateTitle(.)"/>
+                     </xsl:variable>
+                     <xsl:sequence select="tei:htmlHead($pagetitle, 5)"/>
+                     <body class="simple" id="TOP">
+                        <xsl:call-template name="bodyMicroData"/>
+                        <xsl:call-template name="bodyJavascriptHook"/>
+                        <xsl:call-template name="bodyHook"/>
+ 
+                        <xsl:call-template name="startHook"/>
+                        <xsl:call-template name="simpleBody"/>
+
+                        <xsl:call-template name="bodyEndHook"/>
                      </body>
                   </html>
-                  <xsl:if test="$verbose='true'">
+                  <xsl:if test="$verbose = 'true'">
                      <xsl:message>TEI HTML: run end hook template teiEndHook</xsl:message>
                   </xsl:if>
                   <xsl:call-template name="teiEndHook"/>
-                  <!--<xsl:copy select="document(@code)/tei:TEI"/>
-                  <xsl:call-template name="processTEI"/>-->
+                  <xsl:copy select="document(@code)/tei:TEI"/>
+                  <xsl:call-template name="processTEI"/>
+                  <xsl:apply-templates/>
                </xsl:result-document>
             </xsl:for-each>
 
             <xsl:apply-templates/>
    </xsl:template>
-   <!--end of addition-->
+   end of addition-->
    
  
    <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
@@ -145,7 +171,7 @@
          <p>Process top-level elements /</p>
       </desc>
    </doc>
-   <xsl:template name="processTEI">
+   <xsl:template match="/">
       <xsl:for-each select="Edition/part">
          <xsl:apply-templates select="document(@code)/tei:TEI"/>
       </xsl:for-each>
