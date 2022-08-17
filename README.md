@@ -1,67 +1,29 @@
-# Stylesheets
+# Romantic Circles XSLT Repository #
 
-[![GitHub release](https://img.shields.io/github/release/TEIC/Stylesheets.svg)](https://github.com/TEIC/Stylesheets/releases)
-[![Stylesheets Tests](https://github.com/TEIC/Stylesheets/actions/workflows/test.yml/badge.svg)](https://github.com/TEIC/Stylesheets/actions/workflows/test.yml)
+This repo contains all the necessary XSL code to transform TEI documents into xHTML that is ready to be imported to the Drupal backend. For complete instructions on uploading content to Drupal, please see the RC Documentation site.
 
-TEI XSL Stylesheets
+To work with this repo, you'll first need to clone it to your local machine. Git will track any changes you make to these files, which should be useful if (or *when*) artifacts or errors appear in the transformed HTML files. The easiest way to clone the repo is using Terminal (Mac OS). Here's a walk-through:
 
-This is a family of XSLT 2.0 stylesheets to transform TEI XML documents to various formats, including XHTML, LaTeX, XSL Formatting Objects, ePub, plain text, RDF, JSON; and to/from Word OOXML (docx) and OpenOfice (odt).  They concentrate on the core TEI modules which are used for simple transcription and "born digital" writing. It is important to understand that they do _not_:
+-Log into [GitHub](https://github.com/) and navigate to the [Romantic Circles org page](https://github.com/romanticcircles). If you're RC staff, you should've been provided access to this account. Open the "XSLT-templates" repository.
+-Create a folder in a convenient location on your hard drive, such as the desktop, that will ideally hold all RC folders tracked by git (this will the site's dev code repo, which is managed by Acquia [not github], and the GitHub Pages repo for the RC documentation site). I named my folder RC-GIT.
+-Open a terminal instance. This can be the shell provided by Mac OS (in Spotlight search, type Terminal) or a visual code editor such as Visual Studio Code or GitKraken.
+-Check to see if git is installed on your system using the command `git version` (on RC's machines, it will already be installed). If you need to install it, you can follow [this guide](https://github.com/git-guides/install-git) to do so.
+-If this is your first time using git on this machine, you'll also want to configure it to show you as the author of any changes your make. Type `git config --list` to see the current username associated with your installation. If you need to change it, here are the commands:
 
-*   cover all TEI elements and possible attribute values
-*   attempt to define a standard TEI processing or rendering model
-
-and should not be treated as the definitive view of the TEI Consortium.
-
-For more information, see https://tei-c.org/tools/stylesheets/
-
-## Prerequisites
-The package assumes that you have several additional tools installed. Their availability on your system can be verified by issuing the command `make check`.
-
-In particular, Stylesheets assume that you use `ant` version 1.9.x+. If for some reason, you need to use `ant` 1.8.x, you should remove all occurences of the attribute `@zip64Mode` from the file `common/teianttasks.xml`.
-
-It is helpful to have the TEI environment installed locally. Please refer to http://www.tei-c.org/Guidelines/P5/get.xml for hints on how to do that.
-
-It is also possible to avoid manual installation of additional tools, by resorting to the pre-built test environment in Docker described in http://teic.github.io/TCW/testing_and_building.html .
-
-## Usage
-The `bin/` directory contains several executable files, which can be run on Linux, OS X, or other Unix operating systems. These perform a variety of transformations and are very useful for, e.g., generating a schema from a TEI ODD. Some examples:
-```bash
-bin/teitorelaxng --odd ../TEI/P5/Exemplars/tei_all.odd tei_all.rng
 ```
-Assuming you have a copy of the TEI Guidelines repository alongside your copy of the Stylesheets, this will take the tei_all ODD and generate a RelaxNG XML schema for you. Similarly,
-```bash
-bin/teitornc --odd ../TEI/P5/Exemplars/tei_lite.odd tei_lite.rnc
-```
-will produce a RelaxNG Compact Syntax schema for TEI Lite.
-
-## Documentation
-
-To build the documentation, run:
-
-```bash
-make doc
+{
+$ git config --global user.name "John Doe"
+$ git config --global user.email johndoe@example.com
+}
 ```
 
-It will then be available at `release/xslcommon/doc/tei-xsl/index.html`.
+-Once you're configured, navigate to the folder you just created using the `cd` command ('change directory'). If you created the folder on your desktop, the command will be `cd desktop/RC-GIT`
+-From this directory, simply type the command `git clone x`, where x is the URL provided by GitHub in the "Code" dropdown menu (the big green button; simply click the "copy" button and paste the URL into terminal).
+-After a few moments, the process should complete. You can now navigate to the new folder created by the clone process, called XSLT-templates," and see the XSLTs. If you click on them, they should open in OxygenXML.
+-Git will now track any changes you make to the XSL files themselves or anything in the cloned folder (including this README doc). If you have to make substantial changes to the XSLTs, and you want these changes to be available to everyone else using these docs, you should `add`, `commit`, and then `push` your changes to git. Here's an excellent [Git overview](https://medium.com/cs-code/beginners-guide-to-using-git-8e5001791fa6) that will walk you through this process.
 
+That's it! You're all set up to transform TEI files to HTML.
 
-## About the Text Encoding Initiative (TEI)
+For documentation on this process, see the RC Documentation site.
 
-The Text Encoding Initiative (TEI) is a community of practice in the area now known as textual digital humanities. Since 1994 
-the primary output of the TEI has been [the TEI/XML guidelines](https://www.tei-c.org/release/doc/tei-p5-doc/en/html/index.html), a standard for the interchange of textual data. A main focii of the TEI is the [TEI-L mailing list](https://listserv.brown.edu/cgi-bin/wa?A1=ind1904&L=TEI-L); the TEI is also on [github](https://github.com/TEIC/TEI) and [docker](https://hub.docker.com/u/teic), a repository called [TAPAS](https://tapasproject.org/) and an [academic journal, the jTEI](https://journals.openedition.org/jtei/). 
-
-TEI/XML can be thought of as a sibling of HTML (they're approximately the same age, depending on how you measure it) which evolved with a focus on defined textual semantics rather than defined display semantics.  [TEI by example](https://teibyexample.org/) is a good introduction to TEI/XML.
-The [Text Encoding Initiative Wikipedia article](https://en.wikipedia.org/wiki/Text_Encoding_Initiative) contains some short examples. 
-The TEI/XML standard is used by content-based projects such as 
-the [British National Corpus](http://www.natcorp.ox.ac.uk), 
-the [Perseus Project](http://www.perseus.tufts.edu/), 
-the [Women Writers Project](http://www.wwp.northeastern.edu/), 
-the [Oxford Text Archive](http://ota.ox.ac.uk/), 
-the [Digital Tripitaka](https://journals.tdl.org/jodi/index.php/jodi/article/view/84/83) and 
-[SARIT](http://sarit.indology.info/),
-and tool-based projects such as 
-[CorrespSearch](https://correspsearch.net/),  
-[EpiDoc](http://epidoc.sourceforge.net/), 
-[Anthologize](http://anthologize.org/), 
-[Versioning Machine](http://v-machine.org/), 
-and many more diverse projects.
+[tjm, August 2022]
