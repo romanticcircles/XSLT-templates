@@ -29,6 +29,6 @@ $ git config --global user.email johndoe@example.com
 
 That's it! You're all set up to transform TEI files to HTML.
 
-For documentation on this process, see the RC Documentation site.
+For documentation on this process, see the RC Documentation site (link to transformation instructions).
 
 [tjm, August 2022]
