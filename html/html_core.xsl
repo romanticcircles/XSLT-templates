@@ -548,7 +548,7 @@
     
     <desc>Process element l</desc>
   </doc>
-  <xsl:template match="tei:l">
+  <xsl:template match="tei:l[@copyOf]">
     <xsl:element name="{if (ancestor::tei:hi) then 'span' else 'div'}">
       <xsl:if test="@xml:id">
         <xsl:call-template name="makeAnchor"/>
