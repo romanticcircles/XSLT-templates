@@ -361,6 +361,15 @@
       <xsl:when test="not(starts-with($parentName, 'div'))">
         <xsl:apply-templates/>
       </xsl:when>
+      
+      <!--Subhead addition [tjm]-->
+      <xsl:when test="@type='subhead'">
+        <h3>
+          <xsl:apply-templates/>
+        </h3>
+      </xsl:when>
+      <!--End of addition-->
+      
       <xsl:when
         test="
           not(preceding-sibling::tei:head) and starts-with($parentName, 'div') and (tei:keepDivOnPage(..) or
@@ -833,6 +842,13 @@
             />
           </p>
         </xsl:when>
+        
+        <!--Adding unordered list option [tjm]-->
+        <xsl:when test="@type = 'unordered'">
+          <dl><xsl:apply-templates mode="gloss" select="*[not(self::tei:head or self::tei:trailer)]"/></dl>
+        </xsl:when>
+        <!--End of addition-->
+        
         <xsl:when test="@type = 'bibl'">
           <xsl:apply-templates select="*[not(self::tei:head or self::tei:trailer)]" mode="bibl"/>
         </xsl:when>
@@ -1194,6 +1210,13 @@
       <xsl:apply-templates/>
     </xsl:element>
   </xsl:template>
+  
+  <!--Adding milestone unit tag [tjm]-->
+  <xsl:template match="tei:milestone">
+    <hr/><xsl:apply-templates/>
+  </xsl:template>
+  
+  <!--End of addition-->
 
   <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
     <desc>Process note with a @place attribute in the margin</desc>
