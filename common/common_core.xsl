@@ -723,7 +723,7 @@ of this software, even if advised of the possibility of such damage.
    </xsl:template>
 
    <xsl:template match="tei:byline">
-     <xsl:call-template name="makeSpan"/>
+     <!--<xsl:call-template name="makeSpan"/>-->
    </xsl:template>
 
    <xsl:template match="tei:pubPlace">

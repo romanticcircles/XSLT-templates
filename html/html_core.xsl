@@ -878,6 +878,11 @@
       -->
     <xsl:apply-templates mode="inlist" select="$listcontents"/>
   </xsl:template>
+  
+<!--excluding byline from transform [tjm]-->
+<xsl:template match="tei:byline">
+  <br/>
+</xsl:template>
 
 <!--Making bibliography a div w/ class "citation" [tjm]-->
 <xsl:template match="tei:body/div[@citation]">
