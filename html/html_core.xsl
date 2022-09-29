@@ -1803,6 +1803,7 @@
   <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
     <desc>[html] produce all the notes </desc>
   </doc>
+  <!--added h2 tags to output on all tests [tjm]-->
   <xsl:template name="printNotes">
     <xsl:if
       test="
@@ -1855,7 +1856,7 @@
                   <xsl:choose>
                     <xsl:when test="$autoEndNotes = 'true'">
                       <div class="noteHeading">
-                        <xsl:sequence select="tei:i18n('noteHeading')"/>
+                        <h2><xsl:sequence select="tei:i18n('noteHeading')"/></h2>
                       </div>
                       <xsl:apply-templates mode="printnotes" select="key('ALLNOTES', 1)"/>
                     </xsl:when>
@@ -1911,20 +1912,20 @@
                 <xsl:choose>
                   <xsl:when test="$autoEndNotes = 'true'">
                     <div class="noteHeading">
-                      <xsl:sequence select="tei:i18n('noteHeading')"/>
+                      <h2><xsl:sequence select="tei:i18n('noteHeading')"/></h2>
                     </div>
                     <xsl:apply-templates mode="printallnotes" select="key('ALLNOTES', 1)"/>
                   </xsl:when>
                   <xsl:otherwise>
                     <xsl:if test="key('FOOTNOTES', 1)">
                       <div class="noteHeading">
-                        <xsl:sequence select="tei:i18n('noteHeading')"/>
+                        <h2><xsl:sequence select="tei:i18n('noteHeading')"/></h2>
                       </div>
                       <xsl:apply-templates mode="printallnotes" select="key('FOOTNOTES', 1)"/>
                     </xsl:if>
                     <xsl:if test="key('ENDNOTES', 1)">
                       <div class="noteHeading">
-                        <xsl:sequence select="tei:i18n('noteHeading')"/>
+                        <h2><xsl:sequence select="tei:i18n('noteHeading')"/></h2>
                       </div>
                       <xsl:apply-templates mode="printallnotes" select="key('ENDNOTES', 1)"/>
                     </xsl:if>
@@ -1933,7 +1934,7 @@
               </xsl:when>
               <xsl:when test="self::tei:text and $splitLevel = 0">
                 <div class="noteHeading">
-                  <xsl:sequence select="tei:i18n('noteHeading')"/>
+                  <h2><xsl:sequence select="tei:i18n('noteHeading')"/></h2>
                 </div>
                 <xsl:for-each select="tei:front | tei:body | tei:back">
                   <xsl:for-each
@@ -1952,7 +1953,7 @@
               <xsl:when test="parent::tei:group and tei:group"> </xsl:when>
               <xsl:otherwise>
                 <div class="noteHeading">
-                  <xsl:sequence select="tei:i18n('noteHeading')"/>
+                  <h2><xsl:sequence select="tei:i18n('noteHeading')"/></h2>
                 </div>
                 <xsl:apply-templates mode="printnotes" select=".//tei:note">
                   <xsl:with-param name="whence" select="$me"/>
