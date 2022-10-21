@@ -602,10 +602,10 @@
   </xsl:template>
   
   <xsl:template match="tei:lg/tei:l">
-    <!-- <xsl:variable name="lineNbrQT">
+    <xsl:variable name="lineNbrQT">
 			<xsl:number level="any" count="//tei:quote/tei:lg/tei:l" from="//tei:quote"/>
 		</xsl:variable>
-		-->
+		
     <xsl:variable name="lineNbrNT">
       <xsl:number level="any" count="//tei:note/tei:quote/tei:lg/tei:l" from="//tei:quote"/>
     </xsl:variable>
@@ -633,12 +633,14 @@
       <xsl:apply-templates/>
       
       <xsl:choose>
-        <!-- <xsl:when test="parent::tei:lg/parent::tei:quote">
-						<xsl:if test="$lineNbrQT mod 5 = 0">
-							<xsl:value-of select="$lineNbrQT"/>
-						</xsl:if>
-					</xsl:when>
-					-->
+        <xsl:when test="parent::tei:lg/parent::tei:quote">
+          <xsl:if test="$lineNbrQT mod 5 = 0">
+            <span xmlns="http://www.w3.org/1999/xhtml" class="lineNumber">
+              <xsl:value-of select="$lineNbrQT"/>
+            </span>
+          </xsl:if>
+        </xsl:when>
+        
         <xsl:when test="parent::tei:lg/parent::tei:quote/parent::tei:note">
           <xsl:if test="$lineNbrNT mod 5 = 0">
             <span xmlns="http://www.w3.org/1999/xhtml" class="lineNumber">
