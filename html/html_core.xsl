@@ -655,13 +655,13 @@
             </span>
           </xsl:if>
         </xsl:when>
-        <xsl:when test="parent::tei:lg/parent::tei:sp">
+        <!-- <xsl:when test="parent::tei:lg/parent::tei:sp">
           <xsl:if test="$lineNbrSP mod 5 = 0">
             <span xmlns="http://www.w3.org/1999/xhtml" class="lineNumber">
-              <xsl:value-of select="$lineNbrSP"/>
+              <xsl:value-of select="$lineNbrSP"/> 
             </span>
           </xsl:if>
-        </xsl:when>
+        </xsl:when>-->
         <xsl:when test="//tei:div[@type='poetry']">
           <xsl:if test="$lineNbr mod 5 = 0">
             <span xmlns="http://www.w3.org/1999/xhtml" class="lineNumber">
