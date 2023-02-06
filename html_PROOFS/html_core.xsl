@@ -1155,18 +1155,13 @@
         </xsl:element>
       </xsl:if>
     </xsl:when>
+      <!--Hoverbox element around note paragraphs (for hover functionality) // REMOVED FOR PROOFING PURPOSES [tjm]-->
       <xsl:otherwise>
-        <div class="textHoverbox">
           <a class="note_back" href="#{$identifier}" id="{$identifier}_return">
           <sup class="super">
             (<xsl:call-template name="noteN"/>)
           </sup>
           </a>
-          <div class="tooltip">
-            <span>
-              <xsl:value-of select="$note-title"></xsl:value-of></span>
-          </div>
-        </div>
         <xsl:if test="following-sibling::node()[1][self::tei:note]">
           <xsl:element name="{if (tei:match(@rend,'nosup')) then 'span' else 'sup'}">
             <xsl:text>,</xsl:text>
@@ -1175,16 +1170,15 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  
-<!--Wrapper element around note paragraphs (for hover functionality) [tjm]-->
 
-  <xsl:template match="tei:p[descendant::tei:note]">
+  <!-- Removing wrapper div around note paragraphs for proofing purposes
+    <xsl:template match="tei:p[descendant::tei:note]">
     <div class="wrapper">
       <p>
         <xsl:apply-templates/>
       </p>
     </div>
-  </xsl:template>
+  </xsl:template>-->
 
 <!--End of wrapper-->
 
@@ -1396,7 +1390,7 @@
       </span>
       <xsl:if test="$footnoteBackLink = 'true'">
         <!--<xsl:text> </xsl:text>-->
-        <a class="note_back" title="Go back to text" href="#{concat($identifier,'_return')}"><em>  [back]</em></a>
+        <a class="note_back" title="Go back to text" href="#{concat($identifier,'_return')}">  <em>[back]</em></a>
       </xsl:if>
     </div>
   </xsl:template>
